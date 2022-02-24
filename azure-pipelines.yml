@@ -1,0 +1,18 @@
+steps:
+- powershell: |
+   #clone git-secrets repo in $(Agent.TempDirectory) folder
+   cd $(Agent.TempDirectory)
+   git clone "https://github.com/awslabs/git-secrets.git"
+   cd git-secrets
+   #install git-secrets
+    ./install.ps1
+
+   cd $(System.DefaultWorkingDirectory)
+   # Installs git hooks for source repository
+   git secrets --install 
+   #Adds a prohibited  pattern
+   git secrets --add --literal 'iamthesecrecttoscan'
+   #Scans for secrets
+   git secrets --scan
+   
+  displayName: 'PowerShell Script'
